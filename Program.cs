@@ -19,20 +19,16 @@ namespace UFOLandingOnMars
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            // Draw the black sky as space
             g.Clear(Color.Black);
 
-            // Draw the ground with a red gradient
             Rectangle groundRect = new Rectangle(0, 400, 800, 200);
             using (LinearGradientBrush groundBrush = new LinearGradientBrush(groundRect, Color.DarkRed, Color.OrangeRed, LinearGradientMode.Vertical))
             {
                 g.FillRectangle(groundBrush, groundRect);
             }
 
-            // Draw fractal mountains in the horizon
             DrawFractalMountains(g, new Point(0, 400), new Point(800, 400), 80, 6);
 
-            // Draw polygon rocks with grey gradient
             Point[][] rocks =
             {
                 new Point[] { new Point(100, 500), new Point(150, 450), new Point(200, 500) },
@@ -55,16 +51,13 @@ namespace UFOLandingOnMars
                 }
             }
 
-            // Draw UFO with interconnected polygons and Bezier curves
             DrawUFO(g);
 
-            // Draw elliptical craters
             DrawEllipticalCraters(g);
         }
 
         private void DrawUFO(Graphics g)
         {
-            // UFO Base Body
             Point[] ufoBase = { new Point(300, 300), new Point(500, 300), new Point(450, 350), new Point(350, 350) };
             using (LinearGradientBrush ufoBaseBrush = new LinearGradientBrush(new Rectangle(300, 300, 200, 50), Color.Silver, Color.Gray, LinearGradientMode.Vertical))
             {
@@ -75,7 +68,6 @@ namespace UFOLandingOnMars
                 g.DrawPolygon(ufoBasePen, ufoBase);
             }
 
-            // UFO Dome
             using (GraphicsPath domePath = new GraphicsPath())
             {
                 domePath.AddBezier(320, 300, 380, 250, 420, 250, 480, 300);
@@ -92,7 +84,6 @@ namespace UFOLandingOnMars
                 }
             }
 
-            // UFO Lights
             Point[][] ufoLights =
             {
                 new Point[] { new Point(310, 350), new Point(320, 360), new Point(330, 350) },
@@ -169,10 +160,9 @@ namespace UFOLandingOnMars
         private void DrawVoronoiOrganisms(Graphics g, Rectangle crater)
         {
             Random rand = new Random();
-            int organismCount = 20; // Number of organisms
+            int organismCount = 20;
             PointF[] points = new PointF[organismCount];
 
-            // Generate random points within the crater bounds
             for (int i = 0; i < organismCount; i++)
             {
                 float x = rand.Next(crater.Left, crater.Right);
@@ -180,10 +170,9 @@ namespace UFOLandingOnMars
                 points[i] = new PointF(x, y);
             }
 
-            // Draw cells as small circles around these points
             foreach (var point in points)
             {
-                float radius = rand.Next(5, 15); // Random cell size
+                float radius = rand.Next(5, 15);
                 RectangleF cell = new RectangleF(point.X - radius / 2, point.Y - radius / 2, radius, radius);
 
                 using (LinearGradientBrush cellBrush = new LinearGradientBrush(cell, Color.LightGreen, Color.DarkGreen, LinearGradientMode.ForwardDiagonal))
@@ -201,7 +190,6 @@ namespace UFOLandingOnMars
         {
             Random rand = new Random();
 
-            // Define organism positions around the crater
             Point[] positions =
             {
               new Point(crater.Left - 20, crater.Top),
@@ -213,7 +201,7 @@ namespace UFOLandingOnMars
 
             foreach (Point position in positions)
             {
-                DrawLSystemOrganism(g, position, -Math.PI / 2, 60, 3); // Recursive depth of 3
+                DrawLSystemOrganism(g, position, -Math.PI / 2, 60, 3);
             }
         }
         private void DrawLSystemOrganism(Graphics g, Point start, double angle, int length, int depth)
@@ -221,21 +209,18 @@ namespace UFOLandingOnMars
             if (depth == 0 || length <= 2)
                 return;
 
-            // Calculate the endpoint of the current branch
             Point end = new Point(
                 start.X + (int)(Math.Cos(angle) * length),
                 start.Y + (int)(Math.Sin(angle) * length)
             );
 
-            // Draw the branch
             using (Pen branchPen = new Pen(Color.FromArgb(100 + depth * 50, Color.Green), depth))
             {
                 g.DrawLine(branchPen, start, end);
             }
 
-            // Recursive calls for branches
-            double angleVariation = Math.PI / 6; // Branching angle
-            int newLength = length - 10; // Reduce branch length with each depth
+            double angleVariation = Math.PI / 6; 
+            int newLength = length - 10; 
 
             DrawLSystemOrganism(g, end, angle - angleVariation, newLength, depth - 1);
             DrawLSystemOrganism(g, end, angle + angleVariation, newLength, depth - 1);
